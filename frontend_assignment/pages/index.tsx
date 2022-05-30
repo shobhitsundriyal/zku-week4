@@ -1,15 +1,56 @@
 import detectEthereumProvider from "@metamask/detect-provider"
 import { Strategy, ZkIdentity } from "@zk-kit/identity"
 import { generateMerkleProof, Semaphore } from "@zk-kit/protocols"
-import { providers } from "ethers"
+import { providers, Contract, utils } from "ethers"
+import Greeter from "artifacts/contracts/Greeters.sol/Greeters.json"
 import Head from "next/head"
-import React from "react"
+import React, { useEffect } from "react"
+import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
+
 import styles from "../styles/Home.module.css"
 
 export default function Home() {
     const [logs, setLogs] = React.useState("Connect your wallet and greet!")
 
+    const [greeterEvents, setGreeterEvents] = React.useState("Listening for new greetings...")
+
+    const filter = {
+    address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    topics: [utils.id("NewGreeting(bytes32)")],
+  };
+
+    const checkEvents = async() => {
+      const provider = new providers.JsonRpcProvider("http://localhost:8545")
+      const greeterContract = new Contract("0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", Greeter.abi, provider)
+
+      console.log("CHECK EVENTS TRIGGERED")
+      greeterContract.on(filter, (greeting: string) => {
+          console.log(utils.parseBytes32String(greeting))
+          setGreeterEvents(utils.parseBytes32String(greeting))
+        })
+    // const provider = (await detectEthereumProvider()) as any;
+    //     await provider.request({ method: "eth_requestAccounts" });
+    //     const ethersProvider = new providers.Web3Provider(
+    //       provider as ExternalProvider
+    //     );
+    //     ethersProvider.on(filter, (log, event) => {
+    //       console.log(`log: ${utils.toUtf8String(log.data)}`);
+    //       setGreeterEvents(utils.toUtf8String(log.data));
+    //     });
+    }
+
+    useEffect(() => {
+      async function checkEventsCaller(){
+        //   setInterval(async ()=> await checkEvents(), 1000)
+      }
+    
+    //   checkEventsCaller()
+    }, [])
+    
+
+
     async function greet() {
+        checkEvents()
         setLogs("Creating your Semaphore identity...")
 
         const provider = (await detectEthereumProvider()) as any
@@ -77,7 +118,10 @@ export default function Home() {
                 <div onClick={() => greet()} className={styles.button}>
                     Greet
                 </div>
+                
             </main>
+            <button onClick={checkEvents} className='border-2 p-2'>click</button>
+            <textarea id="message" readOnly value={greeterEvents} className="block p-2.5 w-full text-sm rounded-sm bg-black text-white" placeholder="Listening for new greetings..."></textarea>
         </div>
     )
 }

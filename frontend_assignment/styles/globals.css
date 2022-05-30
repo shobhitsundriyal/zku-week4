@@ -1,3 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+	.inputFeild {
+		@apply p-2 bg-transparent border-2 rounded-md block mt-5;
+}}
+
 html,
 body {
     padding: 0;
