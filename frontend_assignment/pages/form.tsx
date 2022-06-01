@@ -8,38 +8,6 @@ function Form() {
 
 	return (
 		<div className='flex justify-center h-[100vh] items-center'>
-			{/* <form onSubmit={onSubmit}>
-				<input
-					className='inputFeild'
-					{...register('firstName', {
-						required: true,
-						maxLength: 20,
-					})}
-					placeholder={'First Name'}
-				/>
-
-				<input
-					className='inputFeild'
-					{...register('lastName', { pattern: /^[A-Za-z]+$/i })}
-					placeholder={'Last Name'}
-				/>
-				<input
-					className='inputFeild'
-					type='number'
-					{...register('age', { min: 18, max: 99 })}
-					placeholder={'Age'}
-				/>
-				<input
-					className='inputFeild'
-					{...register('address')}
-					placeholder={'Address'}
-				/>
-				<input
-					className='inputFeild hover:bg-white hover:text-black transition-colors duration-150'
-					type='submit'
-				/>
-			</form> */}
-
 			<form
 				onSubmit={onSubmit}
 				className='w-full  flex flex-col items-center space-y-12'
@@ -47,6 +15,7 @@ function Form() {
 				<div className='feild-container relative p-2 w-1/5'>
 					<input
 						type='text'
+						autoComplete='off'
 						id='fname'
 						required
 						className=' bg-transparent outline-none px-1 peer relative text-slate-800 z-10 font-mono font-semibold'
@@ -73,6 +42,7 @@ function Form() {
 
 				<div className='feild-container relative p-2 w-1/5'>
 					<input
+						autoComplete='off'
 						type='text'
 						id='lname'
 						required
@@ -100,6 +70,7 @@ function Form() {
 
 				<div className='feild-container relative p-2 w-1/5'>
 					<input
+						autoComplete='off'
 						type='number'
 						id='age'
 						required
@@ -122,6 +93,7 @@ function Form() {
 
 				<div className='feild-container relative p-2 w-1/5'>
 					<input
+						autoComplete='off'
 						type='text'
 						id='address'
 						required

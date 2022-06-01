@@ -10,10 +10,10 @@ import styles from '../styles/Home.module.css'
 export default function Home() {
 	const [logs, setLogs] = React.useState('Connect your wallet and greet!')
 
-	const [greeterEvents, setGreeterEvents] = React.useState<string[]>([])
+	const [greeterEvents, setGreeterEvents] = React.useState<Array<string>>([])
 
 	const [contract, setContract] = React.useState<Contract>()
-	let iter = 1
+	const [iter, setIter] = React.useState(1)
 
 	useEffect(() => {
 		const provider = new providers.JsonRpcProvider('http://localhost:8545')
@@ -28,17 +28,20 @@ export default function Home() {
 
 	useEffect(() => {
 		console.log(greeterEvents, 'event updated')
-	}, [greeterEvents.length])
+	}, [greeterEvents])
 
 	useEffect(() => {
 		console.log(contract)
 		if (contract !== undefined) {
 			console.log('listening events...')
 			contract.on(contract.filters.NewGreeting(), (data: string) => {
-				let tempData = greeterEvents
+				console.log('aaiye aapka itezaar tha')
+				// let tempData = greeterEvents
 				let decodedData = utils.parseBytes32String(data)
-				tempData.push(decodedData)
-				setGreeterEvents(tempData)
+				setGreeterEvents((greeterEvents) =>
+					// greeterEvents.concat(decodedData) this aslso works
+					[...greeterEvents, decodedData]
+				)
 				// console.log(data)
 			})
 		}
@@ -76,6 +79,8 @@ export default function Home() {
 		setLogs('Creating your Semaphore proof...')
 
 		const greeting = 'Hello world ' + String(iter)
+		console.log(greeting)
+		setIter(iter + 2999)
 
 		const witness = Semaphore.genWitness(
 			identity.getTrapdoor(),
@@ -108,7 +113,6 @@ export default function Home() {
 		} else {
 			setLogs('Your anonymous greeting is onchain :)')
 		}
-		iter++
 	}
 
 	return (
